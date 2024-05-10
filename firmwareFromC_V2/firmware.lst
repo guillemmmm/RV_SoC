@@ -1,0 +1,202 @@
+
+firmware.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <start>:
+   0:	00000013          	nop
+   4:	00000093          	li	ra,0
+   8:	00000113          	li	sp,0
+   c:	00000193          	li	gp,0
+  10:	00000213          	li	tp,0
+  14:	00000293          	li	t0,0
+  18:	00000313          	li	t1,0
+  1c:	00000393          	li	t2,0
+  20:	00000413          	li	s0,0
+  24:	00000493          	li	s1,0
+  28:	00000513          	li	a0,0
+  2c:	00000593          	li	a1,0
+  30:	00000613          	li	a2,0
+  34:	00000693          	li	a3,0
+  38:	00000713          	li	a4,0
+  3c:	00000793          	li	a5,0
+  40:	00000813          	li	a6,0
+  44:	00000893          	li	a7,0
+  48:	00000913          	li	s2,0
+  4c:	00000993          	li	s3,0
+  50:	00000a13          	li	s4,0
+  54:	00000a93          	li	s5,0
+  58:	00000b13          	li	s6,0
+  5c:	00000b93          	li	s7,0
+  60:	00000c13          	li	s8,0
+  64:	00000c93          	li	s9,0
+  68:	00000d13          	li	s10,0
+  6c:	00000d93          	li	s11,0
+  70:	00000e13          	li	t3,0
+  74:	00000e93          	li	t4,0
+  78:	00000f13          	li	t5,0
+  7c:	00000f93          	li	t6,0
+  80:	10000137          	lui	sp,0x10000
+  84:	10010113          	add	sp,sp,256 # 10000100 <_heap_start+0xfc>
+  88:	008000ef          	jal	90 <main>
+
+0000008c <loop>:
+  8c:	0000006f          	j	8c <loop>
+
+00000090 <main>:
+  90:	ff010113          	add	sp,sp,-16
+  94:	00112623          	sw	ra,12(sp)
+  98:	00812423          	sw	s0,8(sp)
+  9c:	01010413          	add	s0,sp,16
+  a0:	030000ef          	jal	d0 <_nop>
+  a4:	04c000ef          	jal	f0 <interrupt_enable>
+  a8:	00100613          	li	a2,1
+  ac:	00000593          	li	a1,0
+  b0:	00000513          	li	a0,0
+  b4:	0dc000ef          	jal	190 <configuracioSPI>
+  b8:	20800513          	li	a0,520
+  bc:	094000ef          	jal	150 <intRegister>
+  c0:	00100513          	li	a0,1
+  c4:	050000ef          	jal	114 <interruptPortEnable>
+  c8:	008000ef          	jal	d0 <_nop>
+  cc:	ffdff06f          	j	c8 <main+0x38>
+
+000000d0 <_nop>:
+  d0:	ff010113          	add	sp,sp,-16
+  d4:	00812623          	sw	s0,12(sp)
+  d8:	01010413          	add	s0,sp,16
+  dc:	00000013          	nop
+  e0:	00000013          	nop
+  e4:	00c12403          	lw	s0,12(sp)
+  e8:	01010113          	add	sp,sp,16
+  ec:	00008067          	ret
+
+000000f0 <interrupt_enable>:
+  f0:	ff010113          	add	sp,sp,-16
+  f4:	00812623          	sw	s0,12(sp)
+  f8:	01010413          	add	s0,sp,16
+  fc:	00800313          	li	t1,8
+ 100:	00031073          	.word	0x00031073
+ 104:	00000013          	nop
+ 108:	00c12403          	lw	s0,12(sp)
+ 10c:	01010113          	add	sp,sp,16
+ 110:	00008067          	ret
+
+00000114 <interruptPortEnable>:
+ 114:	fe010113          	add	sp,sp,-32
+ 118:	00812e23          	sw	s0,28(sp)
+ 11c:	02010413          	add	s0,sp,32
+ 120:	00050793          	mv	a5,a0
+ 124:	fef407a3          	sb	a5,-17(s0)
+ 128:	fef44783          	lbu	a5,-17(s0)
+ 12c:	00078663          	beqz	a5,138 <interruptPortEnable+0x24>
+ 130:	08000313          	li	t1,128
+ 134:	0080006f          	j	13c <interruptPortEnable+0x28>
+ 138:	00000313          	li	t1,0
+ 13c:	00431073          	.word	0x00431073
+ 140:	00000013          	nop
+ 144:	01c12403          	lw	s0,28(sp)
+ 148:	02010113          	add	sp,sp,32
+ 14c:	00008067          	ret
+
+00000150 <intRegister>:
+ 150:	fd010113          	add	sp,sp,-48
+ 154:	02812623          	sw	s0,44(sp)
+ 158:	03010413          	add	s0,sp,48
+ 15c:	fca42e23          	sw	a0,-36(s0)
+ 160:	fdc42783          	lw	a5,-36(s0)
+ 164:	fef42623          	sw	a5,-20(s0)
+ 168:	100007b7          	lui	a5,0x10000
+ 16c:	fec42703          	lw	a4,-20(s0)
+ 170:	00e7a023          	sw	a4,0(a5) # 10000000 <variable>
+ 174:	10000537          	lui	a0,0x10000
+ 178:	00052303          	lw	t1,0(a0) # 10000000 <variable>
+ 17c:	00531073          	.word	0x00531073
+ 180:	00000013          	nop
+ 184:	02c12403          	lw	s0,44(sp)
+ 188:	03010113          	add	sp,sp,48
+ 18c:	00008067          	ret
+
+00000190 <configuracioSPI>:
+ 190:	fd010113          	add	sp,sp,-48
+ 194:	02812623          	sw	s0,44(sp)
+ 198:	03010413          	add	s0,sp,48
+ 19c:	00050793          	mv	a5,a0
+ 1a0:	00058693          	mv	a3,a1
+ 1a4:	00060713          	mv	a4,a2
+ 1a8:	fcf40fa3          	sb	a5,-33(s0)
+ 1ac:	00068793          	mv	a5,a3
+ 1b0:	fcf40f23          	sb	a5,-34(s0)
+ 1b4:	00070793          	mv	a5,a4
+ 1b8:	fcf40ea3          	sb	a5,-35(s0)
+ 1bc:	fe042623          	sw	zero,-20(s0)
+ 1c0:	fdf44703          	lbu	a4,-33(s0)
+ 1c4:	fde44783          	lbu	a5,-34(s0)
+ 1c8:	00279793          	sll	a5,a5,0x2
+ 1cc:	00f767b3          	or	a5,a4,a5
+ 1d0:	fef42623          	sw	a5,-20(s0)
+ 1d4:	fdd44783          	lbu	a5,-35(s0)
+ 1d8:	00078863          	beqz	a5,1e8 <configuracioSPI+0x58>
+ 1dc:	fec42783          	lw	a5,-20(s0)
+ 1e0:	0107e793          	or	a5,a5,16
+ 1e4:	fef42623          	sw	a5,-20(s0)
+ 1e8:	200007b7          	lui	a5,0x20000
+ 1ec:	00478793          	add	a5,a5,4 # 20000004 <_heap_start+0x10000000>
+ 1f0:	fec42703          	lw	a4,-20(s0)
+ 1f4:	00e7a023          	sw	a4,0(a5)
+ 1f8:	00000013          	nop
+ 1fc:	02c12403          	lw	s0,44(sp)
+ 200:	03010113          	add	sp,sp,48
+ 204:	00008067          	ret
+
+00000208 <interruptVec>:
+ 208:	fe010113          	add	sp,sp,-32
+ 20c:	00112e23          	sw	ra,28(sp)
+ 210:	00812c23          	sw	s0,24(sp)
+ 214:	02010413          	add	s0,sp,32
+ 218:	400007b7          	lui	a5,0x40000
+ 21c:	0007a783          	lw	a5,0(a5) # 40000000 <_heap_start+0x2ffffffc>
+ 220:	fef42623          	sw	a5,-20(s0)
+ 224:	400007b7          	lui	a5,0x40000
+ 228:	0007a023          	sw	zero,0(a5) # 40000000 <_heap_start+0x2ffffffc>
+ 22c:	fec42783          	lw	a5,-20(s0)
+ 230:	0017f793          	and	a5,a5,1
+ 234:	00078463          	beqz	a5,23c <interruptVec+0x34>
+ 238:	020000ef          	jal	258 <SPImodule>
+ 23c:	00800313          	li	t1,8
+ 240:	00031073          	.word	0x00031073
+ 244:	00000013          	nop
+ 248:	01c12083          	lw	ra,28(sp)
+ 24c:	01812403          	lw	s0,24(sp)
+ 250:	02010113          	add	sp,sp,32
+ 254:	00008067          	ret
+
+00000258 <SPImodule>:
+ 258:	fe010113          	add	sp,sp,-32
+ 25c:	00812e23          	sw	s0,28(sp)
+ 260:	02010413          	add	s0,sp,32
+ 264:	ffff0337          	lui	t1,0xffff0
+ 268:	200007b7          	lui	a5,0x20000
+ 26c:	0007a783          	lw	a5,0(a5) # 20000000 <_heap_start+0xffffffc>
+ 270:	fef42623          	sw	a5,-20(s0)
+ 274:	fec42703          	lw	a4,-20(s0)
+ 278:	30100793          	li	a5,769
+ 27c:	00f71c63          	bne	a4,a5,294 <SPImodule+0x3c>
+ 280:	200007b7          	lui	a5,0x20000
+ 284:	00ace737          	lui	a4,0xace
+ 288:	c0070713          	add	a4,a4,-1024 # acdc00 <SPImodule+0xacd9a8>
+ 28c:	00e7a023          	sw	a4,0(a5) # 20000000 <_heap_start+0xffffffc>
+ 290:	01c0006f          	j	2ac <SPImodule+0x54>
+ 294:	fec42703          	lw	a4,-20(s0)
+ 298:	fff00793          	li	a5,-1
+ 29c:	00f71863          	bne	a4,a5,2ac <SPImodule+0x54>
+ 2a0:	200007b7          	lui	a5,0x20000
+ 2a4:	0007a023          	sw	zero,0(a5) # 20000000 <_heap_start+0xffffffc>
+ 2a8:	00a00f13          	li	t5,10
+ 2ac:	00010337          	lui	t1,0x10
+ 2b0:	fff30313          	add	t1,t1,-1 # ffff <SPImodule+0xfda7>
+ 2b4:	00000013          	nop
+ 2b8:	01c12403          	lw	s0,28(sp)
+ 2bc:	02010113          	add	sp,sp,32
+ 2c0:	00008067          	ret
