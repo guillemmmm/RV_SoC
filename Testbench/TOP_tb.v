@@ -1,264 +1,418 @@
+//TESTBENCH SOC TOP GUILLEM PRENAFETA
+
 `default_nettype none
 `include "spi_defines.vh"
 
 `timescale 1ns/1ps
+`define DELAY 2 //typical delays ticks (ns)
+
+
 module TOP_tb;
 
-    parameter memfile = "machine.hex";
+  parameter memfile = "machine.hex"; //codi d'on cargarem el programa en hex
 
-    integer i;
+//hardware registers/wires--------------//
+  reg clk;
+  reg rstn;
 
-    reg wb_clk = 1'b0;
-    reg wb_rst = 1'b0;
+  //CPU regs
+  reg PROGN;
+  wire [8-1:0] reg_GPIOs;
 
-    wire CS,MOSI,MISO,SCLK;
-    reg [1:0] master_Addr;
-    reg master_wr;
-    reg [31:0] master_data2W;
-    wire [31:0] master_data2Rd;
+  wire MISO;
+  wire MOSI;
+  wire SCLK;
+  wire CSn;
 
-    reg [7:0] spi_conf;
-    reg [7:0] spi_SS;
-
-    reg [31:0] data;
-
-    wire [7:0] reg_GPIOs;
-
-    integer addr0=0;
-    integer addr1=0;
-    integer addrk0=0;
-
-   
+  //to SPI master
+  reg SPImaster_wr;
+  reg [2-1:0] SPImaster_addr;
+  reg [8-1:0] SPImaster_WData;
+  wire [8-1:0] SPImaster_RData;
 
 
-    always  #31 wb_clk <= !wb_clk; //clock 16.1 MHz 62 pulses of 1ns T=62ns
-    initial begin //reset general
-      #62 wb_rst <= 1'b1;
-      #124 wb_rst <=1'b0;
-    end
+//testbench signals---------------//
+  integer i, ig, ix, ij;
 
-    initial begin
-      #200; //esperem a que es facin els resets
-      Set_Master_SPI;
-      #50000;
-      
-
-      /*for (i=0;i<(36*15);i=i+1) begin //hem d'esperar minim 13 cicles instruccions del risc
-        waitClk;
-      end*/
-      waitInsCycle(150);
-
-      waitClk;
-      sendData(32'h00000301);
-      waitEnd;
-      readSpi(`SPI_BUFFER,data);
-      $display("La dada es: %h",data);
-      //$display(data);
-
-      //Ara hem d'esperar que RISCV carregui 1 dada
-      waitInsCycle(60); //50
-
-      waitClk;
-      sendData(32'hFFFFFFFF);
-      waitEnd;
-      readSpi(`SPI_BUFFER,data);
-      $display("La dada es: %h",data);
-
-      /*
-      readSpi(`SPI_BUFFER,data);
-      $display("La dada es: %h",data);
-      //$display(data);
-      waitClk;
-      sendData(32'h00000000);
-      waitEnd;
-      readSpi(`SPI_BUFFER,data);
-      $display("La dada es: %h",data);
-      //$display(data);
-      waitClk;
-      sendData(32'h00000000);
-      waitEnd;
-      readSpi(`SPI_BUFFER,data);
-      $display("La dada es: %h",data);
-      //$display(data);
-      waitClk;
-      sendData(32'h00000000);
-      waitEnd;
-      readSpi(`SPI_BUFFER,data);
-      $display("La dada es: %h",data);
-      //$display(data);
-      waitClk;
-      sendData(32'h00000000);
-      waitEnd;
-      readSpi(`SPI_BUFFER,data);
-      $display("La dada es: %h",data);
-      //$display(data);
-      waitClk;
-      sendData(32'h00000000); //saltara error FIFO empty
-      waitEnd;
-      readSpi(`SPI_BUFFER,data);
-      $display("La dada es: %h",data);
-      
-  */
-    end
-
-    /*always @(TOP_tb.dut.ibus_cyc) begin
-      if(TOP_tb.dut.ibus_adr==32'h000001C4) begin
-        $display("Sortim delay");
-        addrk0=addrk0+1;
-      end
-    end*/
+  reg [8-1:0] dada8b;
+  reg [8-1:0] dada8bit4[4-1:0];
+  reg [32-1:0] dada32b, dada32bRX;
 
 
-// PARAR PROGRAMA EN CERTE INSTRUCCIO ASSEMBLY
-    always @(TOP_tb.dut.ibus_cyc) begin
-      if(TOP_tb.dut.ibus_adr==32'h000002a0) begin
-        $display("Addr 0");
-        waitInsCycle(10);
-        $stop;//--------------------------------------------------
-        addr0=addr0+1;
-        
-      end
-      end
-      //*/
-
-          always @(TOP_tb.dut.dbus_cyc) begin
-      if(TOP_tb.dut.dbus_adr==32'h10000000) begin
-        //$display("Addr 0");
-        addr1=addr1+1;
-      end
-      end
-
-
-
-    initial begin
-      #800000;
-      //#300000000;
-      //#1000000000; //10^9 ps == 1ms
-      $stop;
-    end
+parameter depth = 512;
+reg [31:0]        mem [0:depth-1];
 
 
     TOP
-      #(.memfile  (memfile)
-        )
     dut
       (
-      .i_clk        (wb_clk),
-      .rst_n        (~wb_rst),
+      .i_clk        (clk),
+      .globalRSTN   (rstn),
+      .PROG         (~PROGN),
 
-      .i_CS         (~CS), //es negat
+      .i_CSn         (CSn), //es negat
       .i_MOSI       (MOSI),
-      .SCLK         (SCLK),
+      .i_SCLK         (SCLK),
       .o_MISO       (MISO),
-      .GPIO_out    (reg_GPIOs)
+      .GPIO_out     (reg_GPIOs)
       );
 
     spi_top
     spi_master
       (
-        .Clk      (wb_clk),
-        .Rst_n    (~wb_rst),
-        .Addr     (master_Addr),
-        .Wr       (master_wr),
-        .DataWr   (master_data2W),
-        .DataRd   (master_data2Rd),
+        .Clk      (clk),
+        .Rst_n    (rstn),
+        .Addr     (SPImaster_addr),
+        .Wr       (SPImaster_wr),
+        .DataWr   (SPImaster_WData),
+        .DataRd   (SPImaster_RData),
         .Sck      (SCLK),
         .Mosi     (MOSI),
         .Miso     (MISO),
-        .Ss0      (CS)
+        .Ss0      (CSn)
       );
 
-      task sendData;
-        input [32-1:0] dada;
-        begin
-          spi_SS = 8'hFE; //baixem CS
-          writeSpi(`SPI_SSELEC,{24'h0,spi_SS}); //li definim el selector CS
-          waitClk;
-          writeSpi(`SPI_BUFFER,dada);
-          waitClk;
-          //spi_SS = 8'h00; //pujem CS
-          //writeSpi(`SPI_SSELEC,{24'h0,spi_SS}); //li definim el selector CS
-        end
-      endtask
+    
+  //GENEREM EL CLK
+    initial clk=1'b0;
+    always  #10 clk <= ~clk; //clock de 50MHz
 
-      task writeSpi;
-        input [2-1:0] adress;
-        input [32-1:0] dada;
+
+    initial begin //reset general
+
+      $timeformat(-9, 2, " ns", 10); // format for the time print
+      //definition of control variables
+      rstn=1'b1;
+
+      SPImaster_wr=1'b0;
+      SPImaster_addr=2'd0;
+      SPImaster_WData=8'd0;
+
+      CSnH;
+      
+      $display("[Info- %t] Reset", $time);
+      GeneralRstnPROG; //fem un rst per programar
+
+      $display("[Info- %t] Començem a programar", $time);
+      programMEM; //programem la memoria
+      $display("[Info- %t] Final programacio", $time);
+
+      //ARA LLEGIM LA MEMORIA PER VEURE QUE ES CORRECTE::
+      $display("[Info- %t] Pasem a lectura ", $time);
+      GeneralRstnPROG; //fem un rst per programar
+      
+      readIMEM;
+
+      $display("[Info- %t] Final lectura ", $time);
+      /////////////////////////
+      //Ara ja podem començar a treballar amb el RISCV
+
+      $display("[Info- %t] General RST ", $time);
+      GeneralRstn;
+      Set_Master_SPI;
+
+      /////////////////////////
+      delayus(1000); //1ms d'inicialitzacio
+
+      //enviem per spi
+      CSnL; //BAIXEM cs
+      dada8b=8'd2; //enviem nomes 1Byte //on volem escriure IMEM
+      sendData(dada8b);
+      waitEnd;
+      readSpiMaster(`SPI_BUFFER,dada8b);
+      waitClk;
+      $display("La dada es: %h",dada8b); //rebem la dada inicial ens dona igual
+      CSnH;
+
+      delayus(50);
+
+      //tonrem a enviar i mirem que hem rebut
+      CSnL; //BAIXEM cs
+      dada8b=8'd2; //enviem nomes 1Byte //on volem escriure IMEM
+      sendData(dada8b);
+      waitEnd;
+      readSpiMaster(`SPI_BUFFER,dada8b);
+      waitClk;
+      $display("La dada es: %h",dada8b); //rebem la dada inicial ens dona igual
+      CSnH;
+
+      delayus(100);
+
+      $stop;
+      
+  
+    end
+
+
+    initial begin //timeout
+      #8000000;
+      $stop;
+    end
+
+  
+//SPI MASTER CONTROLLER TASKS----------------------------------
+
+  task programMEM;
+    begin
+
+      //com hem fet rst, tornem a configurar SPI master (coses del modul)
+      Set_Master_SPI; //el configurem a 8b CPOL, CPha 00
+      #1000;
+
+      CSnL; //BAIXEM cs
+
+      dada8b=8'd2; //enviem nomes 1Byte //on volem escriure IMEM
+      sendData(dada8b);
+      waitEnd;
+      readSpiMaster(`SPI_BUFFER,dada8b);
+      waitClk;
+      $display("La dada es: %h",dada8b); //rebem la dada inicial ens dona igual
+
+      $readmemh(memfile, mem); //llegim dades
+
+      ig=0;
+    
+      begin: carrega //enviem tots els bytes
+        forever
         begin
-          master_data2W=dada;
-          master_Addr=adress;
-          master_wr=1'b1;
-          waitClk;
-          master_wr=1'b0;
+          dada32b=mem[ig];
+          if(dada32b===32'hXXXXXXXX) begin
+            disable carrega;
+          end else begin
+            sendInstructionSPI(dada32b,dada32bRX); //anem enviant les dades
+            //$display("Dada rebuda %h, Dada escrita %h, it: %d",dada32bRX,dada32b,ig);
+            ig=ig+1;
+          end
         end
+
+      end 
+
+      waitClk;
+      sendInstructionSPI(32'hFFFFFFFF,dada32b); //enviem dada final (no hi ha cap RV-32IM que sigui tot FF)
+      $display("La dada es: %h",dada32b);
+      #50;
+      $display("S'han carregat %d dades",ig);
+      $display("End of BOOT");
+      #100;
+
+      CSnH; //tornem a pujar CSn
+    end
+  endtask
+
+  task readIMEM;
+    begin
+      Set_Master_SPI; //el configurem a 8b
+      #1000;
+
+      CSnL; //iniciem com
+
+      waitClk;
+      dada8b=8'd1; //enviem nomes 1Byte i volem llegir
+      sendData(dada8b);
+      waitEnd;
+      readSpiMaster(`SPI_BUFFER,dada8b);
+      waitClk;
+      $display("La dada es: %h",dada8b); //rebem la dada inicial ens dona igual
+
+      #1;
+      dada32b<=32'h0; //direccio 0
+      waitClk;
+      $display("%h",dada32b);
+      sendInstructionSPI(dada32b,dada32bRX);
+
+
+      for (ix=0;ix<ig;ix=ix+1) begin
+        dada32b<=dada32b+32'd4;
+        waitClk;
+        //$display("%h",lectura);
+        sendInstructionSPI(dada32b,dada32bRX);
+        #5;
+        //$display("%h, %h, %d",dada32bRX,mem[ix],ix);
+        if(dada32bRX==mem[ix]) begin
+          #1;
+        end else begin
+          $display("Error de IMEM");
+          if(ix>10) begin
+            $stop;
+          end
+        end
+      end
+
+      CSnH;
+
+    end
+  endtask
+
+
+  task sendInstructionSPI; //LSB first and MSBit first
+        input [32-1:0] dada;
+        output [32-1:0] dada32b;
+        begin
+          dada8bit4[3]=dada[31:24];
+          dada8bit4[2]=dada[23:16];
+          dada8bit4[1]=dada[15:8];
+          dada8bit4[0]=dada[7:0];
+          //reg [7:0] dada2[3:0];
+          //integer ij;
+          for(ij=0;ij<4;ij=ij+1) begin
+            waitClk;
+            //$display("%h",dada3[ij]);
+            sendData(dada8bit4[ij]);
+            waitEnd;
+            readSpiMaster(`SPI_BUFFER,dada8bit4[ij]);
+            //$display("%h",dada2[ij]);
+          end
+          dada32b={dada8bit4[3],dada8bit4[2],dada8bit4[1],dada8bit4[0]};
+        end
+  endtask
+
+
+//SPI MASTER TASKS---------------------------------------------
+
+  task sendData;
+          input [8-1:0] dada;
+          begin
+            writeSpiMaster(`SPI_BUFFER,dada);
+            waitClk;
+            //spi_SS = 8'h00; //pujem CS,, es puja sol
+            //writeSpiMaster(`SPI_SSELEC,{24'h0,spi_SS}); //li definim el selector CS
+          end
+  endtask
+
+  task CSnH;
+    begin
+      dada8b = 8'hFF; //baixem CS
+      writeSpiMaster(`SPI_SSELEC,{24'h0,dada8b}); //li definim el selector CS
+      waitClk;
+    end
+  endtask
+
+  task CSnL;
+    begin
+      dada8b = 8'hFE; //baixem CS
+      writeSpiMaster(`SPI_SSELEC,{24'h0,dada8b}); //li definim el selector CS
+      waitClk;
+    end
+  endtask
+
+  task writeSpiMaster;
+      input [2-1:0] adress;
+      input [8-1:0] dada;
+      begin
+      SPImaster_WData=dada;
+      SPImaster_addr=adress;
+      SPImaster_wr=1'b1;
+      waitClk;
+      SPImaster_wr=1'b0;
+      end
       // Task automatically generates a write to a register.
       // Inputs data to write and reg address.
-      endtask
-
-      task readSpi;
-        input [2-1:0] adress;
-        output [32-1:0] data_out;
-        begin
-          master_Addr=adress;
-          #5; //simulem el retard de la lectura
-          data_out=master_data2Rd;
-        end
-        // Task automatically generates a write to a register.
-        // Input reg address. Output read data.
-      endtask
-
-      task waitEnd;
-        begin
-          master_Addr=`SPI_CTRL;
-          waitClk; //nos asseguramos que se propaga bien la direccion
-          fork //farem servir un forkjoin
-            begin : wait_time
-              for(i=0;i<500000;i=i+1) begin
-                #5;
-                waitClk; 
-              end
-              //posem 30 ja que f_trans=fclk necessitem minim 16 clocks
-              $display("Error de timeout esperant a que el busy es posi a 0 a %t",$time);
-              disable busy_wait;
-            end
-            begin : busy_wait
-              wait(master_data2Rd[7]==1'b0);
-              #5
-              disable wait_time;
-            end
-          join
-        end
     endtask
 
-      task Set_Master_SPI;
-        begin
-          spi_conf = {2'b00,1'b0,1'b0,4'd2}; //Ho configurem com CPOL,CPha=0 i Cpre=2
-          writeSpi(`SPI_CONFIG,{24'h0,spi_conf}); //li definim el divisor del SCK
-          waitClk;
-          waitClk;
-          writeSpi(`SPI_CTRL,8'h01); //posem el bit de control a 1 per activar les transmissions
+    task readSpiMaster;
+      input [2-1:0] adress;
+      output [8-1:0] data_out;
+      begin
+        SPImaster_addr=adress;
+        #5; //simulem el retard de la lectura
+        data_out=SPImaster_RData;
+      end
+      // Task automatically generates a write to a register.
+      // Input reg address. Output read data.
+    endtask
+
+  task waitEnd; //tasca per esperar final transmissio SPI
+      begin
+        SPImaster_addr=`SPI_CTRL;
+        waitClk; //nos asseguramos que se propaga bien la direccion
+        fork //farem servir un forkjoin
+          begin : wait_time
+          waitCycles(5000); //posem 30 ja que f_trans=fclk necessitem minim 16 clocks
+          $display("Error de timeout esperant a que el busy es posi a 0 a %t",$time);
+          disable busy_wait;
+          end
+          begin : busy_wait
+          wait(SPImaster_RData[7]==1'b0);
+          #5
+          disable wait_time;
+          end
+        join
+      end
+    endtask
+
+  task Set_Master_SPI;
+    begin
+      dada8b = {2'b00,1'b0,1'b0,4'd4}; //Ho configurem com CPOL,CPha=0 i Cpre=2
+      writeSpiMaster(`SPI_CONFIG,dada8b); //li definim el divisor del SCK
+      waitClk;
+      waitClk;
+      writeSpiMaster(`SPI_CTRL,8'h01); //posem el bit de control a 1 per activar les transmissions
+      waitClk;
+    end
+  endtask
+
+//BASIC TASKS--------------------------------------------------
+
+// generation of reset pulse
+    task GeneralRstn;
+      begin
+        $display("[Info- %t] Reset", $time);
+        rstn = 1'b0;
+        waitCycles(3);
+        rstn = 1'b1;
+      end
+    endtask
+
+// generation of reset pulse in prog mode
+    task GeneralRstnPROG;
+      begin
+        $display("[Info- %t] Reset PROGN", $time);
+        rstn = 1'b0;
+        #`DELAY;
+        PROGN = 1'b0;
+        waitCycles(3);
+        rstn = 1'b1;
+        #`DELAY;
+        PROGN = 1'b1;
+      end
+    endtask
+
+// wait for N clock cycles
+    task waitCycles;
+      input [32-1:0] Ncycles;
+      begin
+        repeat(Ncycles) begin
           waitClk;
         end
-      endtask
+      end
 
+    endtask
 
-      task waitClk;
-        begin
-          @(posedge wb_clk);
-          #10;
+// wait the next posedge clock
+    task waitClk;
+      begin
+        @(posedge clk);
+          #`DELAY;
+      end //begin
+    endtask
 
-        end
-      endtask
-
-      task waitInsCycle;
+// tasca per esperar un cicle d'instruccio
+    task waitInsCycle;
       input integer num;
       begin
         for (i=0;i<(36*num);i=i+1) begin //hem d'esperar minim 13 cicles instruccions del risc
           waitClk;
         end
       end
-      endtask
+    endtask
 
+    task delayms;
+      input integer delayus;
+      begin
+        //sabent rellotge de 50MHz 1 us son 50 clk
+        waitCycles(50);
+      end
+    endtask
 
 
 endmodule

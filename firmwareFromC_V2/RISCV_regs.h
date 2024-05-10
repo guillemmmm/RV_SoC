@@ -12,7 +12,7 @@
 #define DMEM			(volatile uint32_t*)0x10000000
 #define SSI				(volatile uint32_t*)0x20000000
 #define GPIO			(volatile uint32_t*)0x30000000
-#define INT 			(volatile uint32_t*)0x40000000
+#define INTM			(volatile uint32_t*)0x40000000
 
 
 //---- SSI OFFETS ---------//
@@ -31,6 +31,12 @@
 
 #define IE 				1
 #define IS  			0
+
+//----- Interrupt Sources
+
+#define int_SSI        	0x01
+#define int_GPIO       	0x02
+#define int_Timer      	0x04
 
 
 
