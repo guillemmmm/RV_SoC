@@ -1,0 +1,10 @@
+
+State Machine - |TOP|BOOT:boot|estat
+Name estat.IMEMRd estat.IMEMWr estat.SPIWr estat.SPIRd estat.waitSPI estat.START estat.IDLE 
+estat.IDLE 0 0 0 0 0 0 0 
+estat.START 0 0 0 0 0 1 1 
+estat.waitSPI 0 0 0 0 1 0 1 
+estat.SPIRd 0 0 0 1 0 0 1 
+estat.SPIWr 0 0 1 0 0 0 1 
+estat.IMEMWr 0 1 0 0 0 0 1 
+estat.IMEMRd 1 0 0 0 0 0 1 

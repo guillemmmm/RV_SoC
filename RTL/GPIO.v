@@ -18,7 +18,7 @@ module GPIO_MOD
 
         input  wire             i_wb_we,
         input  wire             i_wb_cyc,
-        output reg [8-1:0]      o_wb_rdt,
+        output wire [8-1:0]      o_wb_rdt,
         output reg              o_wb_ack,
 
         output wire             int
@@ -26,13 +26,21 @@ module GPIO_MOD
     );
 
 
+
     reg [8-1:0] getGPIO, setGPIO, dirGPIO, isGPIO; 
     wire [8-1:0] intStatus;
 
     //dirGPIO
-    assign GPIO_out = dirGPIO ? setGPIO : 1'bZ; //si dir==1 output
+	 generate
+		genvar i;
+		 for(i=0;i<8;i=i+1) 
+			begin : gen1
+			  assign GPIO_out[i] = dirGPIO[i] ? setGPIO[i] : 1'bZ; //si dir==1 output
+		 end
+	endgenerate
+   // assign GPIO_out = dirGPIO ? setGPIO : 1'bZ; //si dir==1 output
 
-    assign intStatus = (~dirGPIO)&(getGPIO&(~GPIO_out)); //negedge gpio if defined as input
+    assign intStatus = (~dirGPIO)&(setGPIO)&(getGPIO&(~GPIO_out)); //negedge gpio if defined as input and IE(setGPIO to 1)
 
     //getGPIO
     always@(posedge clk) begin

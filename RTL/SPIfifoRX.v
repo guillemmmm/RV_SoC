@@ -16,8 +16,8 @@ input wire          ren, //vol llegir
 
 input wire [16-1:0]     wdata,
 output wire [16-1:0]    rdata, //data a llegir
-output reg             full, //indica que esta plena
-output reg             empty,  //indica que esta buida
+output wire             full, //indica que esta plena
+output wire             empty,  //indica que esta buida
 
 input wire              shiftFIFO //per resetejar fifo
 
@@ -43,8 +43,12 @@ assign empty=!dataIn;
 
 //escriptura i lectura
 always @(posedge clk or negedge rstn) begin
-    if(!rstn | !shiftFIFO) begin
+    if(~rstn) begin
         //for (i=0; i<SizeWords; i=i+1) mem[i] <= 16'b0; //dona igual
+        wpointer<={BitSizeWords{1'b0}};
+        rdpointer<={BitSizeWords{1'b0}}; //apunti al ultim registre
+        dataIn<=1'b0;
+    end else if(~shiftFIFO) begin
         wpointer<={BitSizeWords{1'b0}};
         rdpointer<={BitSizeWords{1'b0}}; //apunti al ultim registre
         dataIn<=1'b0;

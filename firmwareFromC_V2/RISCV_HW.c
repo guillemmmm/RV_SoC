@@ -1,7 +1,7 @@
 
 
-#include <stdint.h>
-#include <stdbool.h>
+//#include <stdint.h>
+//#include <stdbool.h>
 
 #include "RISCV_HW.h"
 
@@ -66,11 +66,28 @@ void NVIC(void){
 	__asm__ volatile(".word 0x00031073");
 }
 
-void INTENABLE(uint32_t source){
+void INTENABLE(uint8_t source){
 	*(INTM+1)=*(INTM+1) | source;
 }
-void INTDISABLE(uint32_t source){
+void INTDISABLE(uint8_t source){
 	*(INTM+1)=*(INTM+1) & (~source);
 }
 
 
+//----- GPIO functions------------//
+void GPIO_Input(uint8_t GPIOpin){
+	*(GPIO+dirGPIO) = (*(GPIO+dirGPIO))&(~GPIOpin);
+}
+void GPIO_Output(uint8_t GPIOpin){
+	*(GPIO+dirGPIO) = (*(GPIO+dirGPIO))|(GPIOpin);
+}
+void GPIO_write(uint8_t GPIOpin, uint8_t GPIO_state){
+	*(GPIO+setGPIO) = ((*(GPIO+setGPIO))&(~GPIOpin))|(GPIO_state&GPIOpin);
+}
+uint8_t GPIO_read(void){
+	return (*(GPIO+getGPIO));
+}
+void GPIO_IntEnable(uint8_t GPIOpin){
+	//ha de ser input
+	*(GPIO+setGPIO) = ((*(GPIO+setGPIO))&(~GPIOpin))|(GPIOpin);
+}

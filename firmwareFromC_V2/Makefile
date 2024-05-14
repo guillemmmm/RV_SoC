@@ -3,7 +3,7 @@ CFLAGS = -march=rv32im -Wl,-Bstatic,-T,sections.lds,--strip-debug -ffreestanding
 
 
 firmware.elf: sections.lds start.s firmware.c
-	${CROSS}gcc -DCLK_FREQ=50000000 ${CFLAGS} -o $@ start.s firmware.c
+	${CROSS}gcc -DCLK_FREQ=50000000 ${CFLAGS} -o $@ start.s firmware.c RISCV_HW.c
 
 
 
@@ -17,7 +17,11 @@ firmware.elf: sections.lds start.s firmware.c
 
 all_noflash: firmware.elf firmware.hex firmware.lst
 
-all: all_noflash 
+run_make_word: firmware.hex
+	python3 makeWord.py
+
+
+all: clear all_noflash run_make_word
 
 clear:
 	rm -rf *.elf

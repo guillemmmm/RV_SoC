@@ -70,10 +70,11 @@ module interrupt
     //per si de cas fem detetcor de posedges
     reg [8-1:0]     pos;
     wire [8-1:0]    interrupts = {int8, int7, int6, int5, int4, int3, int2, int1};
+    wire [8-1:0]    posDetect = ((~pos)&interrupts);
 
     always@(posedge clk)    pos<=registers[1] & interrupts;
 
-    assign posedgeInt = |((~pos)&interrupts);
+    assign posedgeInt = |posDetect;
 
     always@(posedge clk or negedge rstn) begin
         if(~rstn) begin
@@ -82,10 +83,10 @@ module interrupt
         end else begin
             if(i_wb_we&o_wb_ack) begin
                 if(addr)    registers[1]<=i_wb_data;
-                else        registers[0]<=i_wb_data | posedgeInt;
+                else        registers[0]<=i_wb_data | posDetect;
             end else begin
                 registers[1]<=registers[1];
-                registers[0]<=registers[0] | posedgeInt;
+                registers[0]<=registers[0] | posDetect;
             end
         end
     end

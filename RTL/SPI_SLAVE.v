@@ -32,7 +32,7 @@ module SPI_SLAVE
 
         //SPI interface (2ext)
         input wire i_SCLK,
-        output reg o_MISO,
+        output wire o_MISO,
         input wire i_MOSI,
         input wire i_CSn //per nivell baix (CS a 0 esta activat)
         );
@@ -46,10 +46,11 @@ module SPI_SLAVE
         //wire rdcounterLENW = i_CSn ? 1'b0 : (rdcounter==LEN);
 
     
+        wire sclk_sample, sclk_CSN_shift;
 
     assign sclk_sample = (CPolPha[1]^CPolPha[0]) ? ~i_SCLK : i_SCLK; //(posedge)
     //assign sclk_shift = ~sclk_sample;
-    assign sclk_CSN_shift = CPolPha[0] ? (1'b0) : (i_CSn);
+    //assign sclk_CSN_shift = CPolPha[0] ? (1'b0) : (i_CSn);
 
 
     //lectura
@@ -59,8 +60,9 @@ module SPI_SLAVE
 
 
     //escriptura
-    always@(negedge sclk_sample or negedge sclk_CSN_shift) begin
-      txcounter<=LEN-rdcounter;
+    always@(negedge sclk_sample or negedge rstn) begin
+		if(~rstn) txcounter<=LEN;
+      else txcounter<=LEN-rdcounter;
     end
 
     //rdcounter

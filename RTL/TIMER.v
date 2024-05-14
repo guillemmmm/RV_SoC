@@ -10,7 +10,10 @@ module TIMER
     (
         input wire clk,
         input wire rst,
-        input wire [2:0] addr,     
+        
+        input wire addr, 
+
+
         output wire int
         
     );
@@ -21,7 +24,7 @@ module TIMER
    reg Trst;
    wire en;
 
-   assign int<=Trst;
+   assign int=Trst;
 
    always @(posedge clk or posedge rst) begin
        if (rst|Trst) begin
@@ -36,12 +39,16 @@ module TIMER
    end
 
    always @(counter) begin
-       if(counter>timerReg[0]) begin
+       if(int) begin
            Trst<=1'b1;
        end else begin
-           Tsrt<=1'b0;
+           Trst<=1'b0;
        end
    end
+
+
+
+   assign int = counter==timerReg[0];
 
 
 endmodule

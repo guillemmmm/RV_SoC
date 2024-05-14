@@ -9,10 +9,11 @@
 
 import sys
 
+
 with open('firmware.hex','r') as file:
     entrada_data=file.read()
     numeros=entrada_data.split()
-    print(len(numeros))
+    #print(len(numeros))
     datos_nuevo=''
     k=0
     for i in range(0,int((len(numeros)-1)/4)):
@@ -26,9 +27,14 @@ with open('firmware.hex','r') as file:
         #print(cadena)
         datos_nuevo=datos_nuevo+(cadena+' ')
         datos_nuevo=datos_nuevo.replace(" ","\n")
-    print(datos_nuevo)
+    #print(datos_nuevo)
+    with open("../Testbench/codi.hex","w") as file_w:
+        file_w.write(datos_nuevo)
     with open("machine.hex","w") as file_w:
         file_w.write(datos_nuevo)
+
+    
+    print("Program size %d words which is %d Bytes (%d bits)\n" % ((len(numeros)-1)/4, len(numeros)-1, (len(numeros)-1)*8))
 
 
 

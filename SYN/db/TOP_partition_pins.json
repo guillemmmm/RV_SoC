@@ -1,0 +1,69 @@
+{
+	"partitions" : [
+		{
+			"name" : "Top",
+			"pins" : [
+				{
+					"name" : "o_MISO",
+					"strict" : false
+				},
+				{
+					"name" : "GPIO_out[0]",
+					"strict" : false
+				},
+				{
+					"name" : "GPIO_out[1]",
+					"strict" : false
+				},
+				{
+					"name" : "GPIO_out[2]",
+					"strict" : false
+				},
+				{
+					"name" : "GPIO_out[3]",
+					"strict" : false
+				},
+				{
+					"name" : "GPIO_out[4]",
+					"strict" : false
+				},
+				{
+					"name" : "GPIO_out[5]",
+					"strict" : false
+				},
+				{
+					"name" : "GPIO_out[6]",
+					"strict" : false
+				},
+				{
+					"name" : "GPIO_out[7]",
+					"strict" : false
+				},
+				{
+					"name" : "i_CSn",
+					"strict" : false
+				},
+				{
+					"name" : "i_clk",
+					"strict" : false
+				},
+				{
+					"name" : "globalRSTN",
+					"strict" : false
+				},
+				{
+					"name" : "i_SCLK",
+					"strict" : false
+				},
+				{
+					"name" : "PROG",
+					"strict" : false
+				},
+				{
+					"name" : "i_MOSI",
+					"strict" : false
+				}
+			]
+		}
+	]
+}

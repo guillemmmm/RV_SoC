@@ -9,7 +9,7 @@
 
 module TOP_tb;
 
-  parameter memfile = "machine.hex"; //codi d'on cargarem el programa en hex
+  parameter memfile = "codi.hex"; //codi d'on cargarem el programa en hex
 
 //hardware registers/wires--------------//
   reg clk;
@@ -38,6 +38,11 @@ module TOP_tb;
   reg [8-1:0] dada8bit4[4-1:0];
   reg [32-1:0] dada32b, dada32bRX;
 
+  reg GPIO_pin0;
+  wire GPIO_pin1;
+
+  assign GPIO_pin1 = reg_GPIOs[1];
+  assign reg_GPIOs[0] = GPIO_pin0;
 
 parameter depth = 512;
 reg [31:0]        mem [0:depth-1];
@@ -54,7 +59,7 @@ reg [31:0]        mem [0:depth-1];
       .i_MOSI       (MOSI),
       .i_SCLK         (SCLK),
       .o_MISO       (MISO),
-      .GPIO_out     (reg_GPIOs)
+      .GPIO_out     ({reg_GPIOs[7:0]})
       );
 
     spi_top
@@ -80,13 +85,15 @@ reg [31:0]        mem [0:depth-1];
 
     initial begin //reset general
 
-      $timeformat(-9, 2, " ns", 10); // format for the time print
+      $timeformat(-6, 2, " us", 10); // format for the time print
       //definition of control variables
       rstn=1'b1;
 
       SPImaster_wr=1'b0;
       SPImaster_addr=2'd0;
       SPImaster_WData=8'd0;
+
+      GPIO_pin0=1'b1;
 
       CSnH;
       
@@ -124,7 +131,7 @@ reg [31:0]        mem [0:depth-1];
       $display("La dada es: %h",dada8b); //rebem la dada inicial ens dona igual
       CSnH;
 
-      delayus(50);
+      delayus(100); //esperem 100us
 
       //tonrem a enviar i mirem que hem rebut
       CSnL; //BAIXEM cs
@@ -136,11 +143,20 @@ reg [31:0]        mem [0:depth-1];
       $display("La dada es: %h",dada8b); //rebem la dada inicial ens dona igual
       CSnH;
 
-      delayus(100);
+      delayus(200);
+
+      //escribim gpio[1] a 0
+      GPIO_pin0=1'b0;
+
+      delayus(1000);
 
       $stop;
       
   
+    end
+
+    initial begin //busquem instruccio de reactivar interrupcions
+      while(1) findINS(32'h00031073);
     end
 
 
@@ -148,6 +164,20 @@ reg [31:0]        mem [0:depth-1];
       #8000000;
       $stop;
     end
+
+
+// CPU task
+
+  task findINS;
+    input [32-1:0] ins;
+    begin
+      @(posedge TOP_tb.dut.ibus_cyc) begin
+        if(TOP_tb.dut.ibus_rdt==ins) begin
+          $display("[Info- %t] s'ha arribat a instruccio desitjada %h" , $time, ins);
+        end
+      end
+    end
+  endtask
 
   
 //SPI MASTER CONTROLLER TASKS----------------------------------
@@ -406,11 +436,11 @@ reg [31:0]        mem [0:depth-1];
       end
     endtask
 
-    task delayms;
-      input integer delayus;
+    task delayus;
+      input integer delay;
       begin
         //sabent rellotge de 50MHz 1 us son 50 clk
-        waitCycles(50);
+        waitCycles(delay*50);
       end
     endtask
 

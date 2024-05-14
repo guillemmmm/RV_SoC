@@ -29,7 +29,7 @@ module BOOT
         input wire [8-1:0] i_data2R,
         output reg o_wb_cyc,
         output reg o_wb_we,
-        output reg [8-1:0] o_data2W,
+        output wire [8-1:0] o_data2W,
         output reg addr,
         input wire int //per avisar a la maquina d'estats que ha arribat la dada
 

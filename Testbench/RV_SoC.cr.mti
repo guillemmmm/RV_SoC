@@ -1,0 +1,242 @@
+/home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/GPIO.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/GPIO.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module GPIO_MOD
+
+Top level modules:
+	GPIO_MOD
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/Testbench/spi_master_rtl/spi_cu.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/Testbench/spi_master_rtl/spi_cu.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module spi_cu
+
+Top level modules:
+	spi_cu
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_top.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_top.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_top
+
+Top level modules:
+	serv_top
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_compdec.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_compdec.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_compdec
+
+Top level modules:
+	serv_compdec
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_bufreg.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_bufreg.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_bufreg
+
+Top level modules:
+	serv_bufreg
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/SPIfifoRX.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/SPIfifoRX.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module SPIfifo
+
+Top level modules:
+	SPIfifo
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_mem_if.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_mem_if.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_mem_if
+
+Top level modules:
+	serv_mem_if
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_bufreg2.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_bufreg2.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_bufreg2
+
+Top level modules:
+	serv_bufreg2
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/TOP.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/TOP.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module TOP
+
+Top level modules:
+	TOP
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/Testbench/spi_master_rtl/spi_top.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/Testbench/spi_master_rtl/spi_top.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module spi_top
+
+Top level modules:
+	spi_top
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_synth_wrapper.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_synth_wrapper.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_synth_wrapper
+
+Top level modules:
+	serv_synth_wrapper
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_rf_if.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_rf_if.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_rf_if
+
+Top level modules:
+	serv_rf_if
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/interruptMOD.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/interruptMOD.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module interrupt
+
+Top level modules:
+	interrupt
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_rf_ram.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_rf_ram.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_rf_ram
+
+Top level modules:
+	serv_rf_ram
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_immdec.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_immdec.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_immdec
+
+Top level modules:
+	serv_immdec
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/SPI_SLAVE.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/SPI_SLAVE.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module SPI_SLAVE
+
+Top level modules:
+	SPI_SLAVE
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_csr.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_csr.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_csr
+
+Top level modules:
+	serv_csr
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_state.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_state.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_state
+
+Top level modules:
+	serv_state
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/IMEM_2024.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/IMEM_2024.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module IMEM
+
+Top level modules:
+	IMEM
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_rf_top.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_rf_top.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_rf_top
+
+Top level modules:
+	serv_rf_top
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_alu.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_alu.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_alu
+
+Top level modules:
+	serv_alu
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_aligner.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_aligner.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_aligner
+
+Top level modules:
+	serv_aligner
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/TIMER.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/TIMER.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module TIMER
+
+Top level modules:
+	TIMER
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/SPI_MODULE.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/SPI_MODULE.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module SPI_MODULE
+
+Top level modules:
+	SPI_MODULE
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/Testbench/spi_master_rtl/spi_regs.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/Testbench/spi_master_rtl/spi_regs.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module spi_regs
+
+Top level modules:
+	spi_regs
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/Testbench/spi_master_rtl/shiftreg.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/Testbench/spi_master_rtl/shiftreg.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module shiftreg
+
+Top level modules:
+	shiftreg
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_decode.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_decode.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_decode
+
+Top level modules:
+	serv_decode
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_rf_ram_if.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_rf_ram_if.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_rf_ram_if
+
+Top level modules:
+	serv_rf_ram_if
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_ctrl.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/CPU/serv_ctrl.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module serv_ctrl
+
+Top level modules:
+	serv_ctrl
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/DMEM.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/DMEM.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module DMEM
+
+Top level modules:
+	DMEM
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/BOOT.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/BOOT.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module BOOT
+
+Top level modules:
+	BOOT
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/Testbench/spi_master_rtl/pulse_generator.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/Testbench/spi_master_rtl/pulse_generator.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module pulse_generator
+
+Top level modules:
+	pulse_generator
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/Testbench/TOP_tb.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/Testbench/TOP_tb.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module TOP_tb
+
+Top level modules:
+	TOP_tb
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/Testbench/spi_master_rtl/spi_defines.vh {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/Testbench/spi_master_rtl/spi_defines.vh
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+
+} {} {}} /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/MDU.v {1 {vlog -work work -stats=none /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/MDU.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module MDU
+
+Top level modules:
+	MDU
+
+} {} {}}

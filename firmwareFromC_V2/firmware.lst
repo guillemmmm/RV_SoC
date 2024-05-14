@@ -38,7 +38,7 @@ Disassembly of section .text:
   78:	00000f13          	li	t5,0
   7c:	00000f93          	li	t6,0
   80:	10000137          	lui	sp,0x10000
-  84:	10010113          	add	sp,sp,256 # 10000100 <_heap_start+0xfc>
+  84:	10010113          	add	sp,sp,256 # 10000100 <_heap_start+0x100>
   88:	008000ef          	jal	90 <main>
 
 0000008c <loop>:
@@ -49,154 +49,352 @@ Disassembly of section .text:
   94:	00112623          	sw	ra,12(sp)
   98:	00812423          	sw	s0,8(sp)
   9c:	01010413          	add	s0,sp,16
-  a0:	030000ef          	jal	d0 <_nop>
-  a4:	04c000ef          	jal	f0 <interrupt_enable>
-  a8:	00100613          	li	a2,1
-  ac:	00000593          	li	a1,0
-  b0:	00000513          	li	a0,0
-  b4:	0dc000ef          	jal	190 <configuracioSPI>
-  b8:	20800513          	li	a0,520
-  bc:	094000ef          	jal	150 <intRegister>
-  c0:	00100513          	li	a0,1
-  c4:	050000ef          	jal	114 <interruptPortEnable>
-  c8:	008000ef          	jal	d0 <_nop>
-  cc:	ffdff06f          	j	c8 <main+0x38>
+  a0:	144000ef          	jal	1e4 <_nop>
+  a4:	2ac00513          	li	a0,684
+  a8:	1bc000ef          	jal	264 <intRegister>
+  ac:	158000ef          	jal	204 <interrupt_enable>
+  b0:	00100513          	li	a0,1
+  b4:	174000ef          	jal	228 <interruptPortEnable>
+  b8:	00100513          	li	a0,1
+  bc:	260000ef          	jal	31c <INTENABLE>
+  c0:	0d4000ef          	jal	194 <init_GPIOs>
+  c4:	120000ef          	jal	1e4 <_nop>
+  c8:	ffdff06f          	j	c4 <main+0x34>
 
-000000d0 <_nop>:
-  d0:	ff010113          	add	sp,sp,-16
-  d4:	00812623          	sw	s0,12(sp)
-  d8:	01010413          	add	s0,sp,16
-  dc:	00000013          	nop
-  e0:	00000013          	nop
-  e4:	00c12403          	lw	s0,12(sp)
-  e8:	01010113          	add	sp,sp,16
-  ec:	00008067          	ret
+000000cc <SSI_isr>:
+  cc:	fe010113          	add	sp,sp,-32
+  d0:	00812e23          	sw	s0,28(sp)
+  d4:	02010413          	add	s0,sp,32
+  d8:	200007b7          	lui	a5,0x20000
+  dc:	0007d783          	lhu	a5,0(a5) # 20000000 <_heap_start+0x10000000>
+  e0:	01079793          	sll	a5,a5,0x10
+  e4:	0107d793          	srl	a5,a5,0x10
+  e8:	fef42623          	sw	a5,-20(s0)
+  ec:	200007b7          	lui	a5,0x20000
+  f0:	fec42703          	lw	a4,-20(s0)
+  f4:	01071713          	sll	a4,a4,0x10
+  f8:	01075713          	srl	a4,a4,0x10
+  fc:	00e79023          	sh	a4,0(a5) # 20000000 <_heap_start+0x10000000>
+ 100:	00000013          	nop
+ 104:	01c12403          	lw	s0,28(sp)
+ 108:	02010113          	add	sp,sp,32
+ 10c:	00008067          	ret
 
-000000f0 <interrupt_enable>:
-  f0:	ff010113          	add	sp,sp,-16
-  f4:	00812623          	sw	s0,12(sp)
-  f8:	01010413          	add	s0,sp,16
-  fc:	00800313          	li	t1,8
- 100:	00031073          	.word	0x00031073
- 104:	00000013          	nop
- 108:	00c12403          	lw	s0,12(sp)
- 10c:	01010113          	add	sp,sp,16
- 110:	00008067          	ret
+00000110 <GPIO_isr>:
+ 110:	fe010113          	add	sp,sp,-32
+ 114:	00812e23          	sw	s0,28(sp)
+ 118:	02010413          	add	s0,sp,32
+ 11c:	300007b7          	lui	a5,0x30000
+ 120:	00c78793          	add	a5,a5,12 # 3000000c <_heap_start+0x2000000c>
+ 124:	0007c783          	lbu	a5,0(a5)
+ 128:	fef407a3          	sb	a5,-17(s0)
+ 12c:	300007b7          	lui	a5,0x30000
+ 130:	00c78793          	add	a5,a5,12 # 3000000c <_heap_start+0x2000000c>
+ 134:	00078023          	sb	zero,0(a5)
+ 138:	fef44783          	lbu	a5,-17(s0)
+ 13c:	0017f793          	and	a5,a5,1
+ 140:	02078463          	beqz	a5,168 <GPIO_isr+0x58>
+ 144:	300007b7          	lui	a5,0x30000
+ 148:	00478793          	add	a5,a5,4 # 30000004 <_heap_start+0x20000004>
+ 14c:	0007c783          	lbu	a5,0(a5)
+ 150:	0ff7f713          	zext.b	a4,a5
+ 154:	300007b7          	lui	a5,0x30000
+ 158:	00478793          	add	a5,a5,4 # 30000004 <_heap_start+0x20000004>
+ 15c:	00274713          	xor	a4,a4,2
+ 160:	0ff77713          	zext.b	a4,a4
+ 164:	00e78023          	sb	a4,0(a5)
+ 168:	00000013          	nop
+ 16c:	01c12403          	lw	s0,28(sp)
+ 170:	02010113          	add	sp,sp,32
+ 174:	00008067          	ret
 
-00000114 <interruptPortEnable>:
- 114:	fe010113          	add	sp,sp,-32
- 118:	00812e23          	sw	s0,28(sp)
- 11c:	02010413          	add	s0,sp,32
- 120:	00050793          	mv	a5,a0
- 124:	fef407a3          	sb	a5,-17(s0)
- 128:	fef44783          	lbu	a5,-17(s0)
- 12c:	00078663          	beqz	a5,138 <interruptPortEnable+0x24>
- 130:	08000313          	li	t1,128
- 134:	0080006f          	j	13c <interruptPortEnable+0x28>
- 138:	00000313          	li	t1,0
- 13c:	00431073          	.word	0x00431073
- 140:	00000013          	nop
- 144:	01c12403          	lw	s0,28(sp)
- 148:	02010113          	add	sp,sp,32
- 14c:	00008067          	ret
+00000178 <Timer_isr>:
+ 178:	ff010113          	add	sp,sp,-16
+ 17c:	00812623          	sw	s0,12(sp)
+ 180:	01010413          	add	s0,sp,16
+ 184:	00000013          	nop
+ 188:	00c12403          	lw	s0,12(sp)
+ 18c:	01010113          	add	sp,sp,16
+ 190:	00008067          	ret
 
-00000150 <intRegister>:
- 150:	fd010113          	add	sp,sp,-48
- 154:	02812623          	sw	s0,44(sp)
- 158:	03010413          	add	s0,sp,48
- 15c:	fca42e23          	sw	a0,-36(s0)
- 160:	fdc42783          	lw	a5,-36(s0)
- 164:	fef42623          	sw	a5,-20(s0)
- 168:	100007b7          	lui	a5,0x10000
- 16c:	fec42703          	lw	a4,-20(s0)
- 170:	00e7a023          	sw	a4,0(a5) # 10000000 <variable>
- 174:	10000537          	lui	a0,0x10000
- 178:	00052303          	lw	t1,0(a0) # 10000000 <variable>
- 17c:	00531073          	.word	0x00531073
- 180:	00000013          	nop
- 184:	02c12403          	lw	s0,44(sp)
- 188:	03010113          	add	sp,sp,48
- 18c:	00008067          	ret
+00000194 <init_GPIOs>:
+ 194:	ff010113          	add	sp,sp,-16
+ 198:	00112623          	sw	ra,12(sp)
+ 19c:	00812423          	sw	s0,8(sp)
+ 1a0:	01010413          	add	s0,sp,16
+ 1a4:	00100513          	li	a0,1
+ 1a8:	228000ef          	jal	3d0 <GPIO_Input>
+ 1ac:	00100513          	li	a0,1
+ 1b0:	398000ef          	jal	548 <GPIO_IntEnable>
+ 1b4:	00200513          	li	a0,2
+ 1b8:	164000ef          	jal	31c <INTENABLE>
+ 1bc:	00200513          	li	a0,2
+ 1c0:	278000ef          	jal	438 <GPIO_Output>
+ 1c4:	00200593          	li	a1,2
+ 1c8:	00200513          	li	a0,2
+ 1cc:	2b8000ef          	jal	484 <GPIO_write>
+ 1d0:	00000013          	nop
+ 1d4:	00c12083          	lw	ra,12(sp)
+ 1d8:	00812403          	lw	s0,8(sp)
+ 1dc:	01010113          	add	sp,sp,16
+ 1e0:	00008067          	ret
 
-00000190 <configuracioSPI>:
- 190:	fd010113          	add	sp,sp,-48
- 194:	02812623          	sw	s0,44(sp)
- 198:	03010413          	add	s0,sp,48
- 19c:	00050793          	mv	a5,a0
- 1a0:	00058693          	mv	a3,a1
- 1a4:	00060713          	mv	a4,a2
- 1a8:	fcf40fa3          	sb	a5,-33(s0)
- 1ac:	00068793          	mv	a5,a3
- 1b0:	fcf40f23          	sb	a5,-34(s0)
- 1b4:	00070793          	mv	a5,a4
- 1b8:	fcf40ea3          	sb	a5,-35(s0)
- 1bc:	fe042623          	sw	zero,-20(s0)
- 1c0:	fdf44703          	lbu	a4,-33(s0)
- 1c4:	fde44783          	lbu	a5,-34(s0)
- 1c8:	00279793          	sll	a5,a5,0x2
- 1cc:	00f767b3          	or	a5,a4,a5
- 1d0:	fef42623          	sw	a5,-20(s0)
- 1d4:	fdd44783          	lbu	a5,-35(s0)
- 1d8:	00078863          	beqz	a5,1e8 <configuracioSPI+0x58>
- 1dc:	fec42783          	lw	a5,-20(s0)
- 1e0:	0107e793          	or	a5,a5,16
- 1e4:	fef42623          	sw	a5,-20(s0)
- 1e8:	200007b7          	lui	a5,0x20000
- 1ec:	00478793          	add	a5,a5,4 # 20000004 <_heap_start+0x10000000>
- 1f0:	fec42703          	lw	a4,-20(s0)
- 1f4:	00e7a023          	sw	a4,0(a5)
- 1f8:	00000013          	nop
- 1fc:	02c12403          	lw	s0,44(sp)
- 200:	03010113          	add	sp,sp,48
- 204:	00008067          	ret
+000001e4 <_nop>:
+ 1e4:	ff010113          	add	sp,sp,-16
+ 1e8:	00812623          	sw	s0,12(sp)
+ 1ec:	01010413          	add	s0,sp,16
+ 1f0:	00000013          	nop
+ 1f4:	00000013          	nop
+ 1f8:	00c12403          	lw	s0,12(sp)
+ 1fc:	01010113          	add	sp,sp,16
+ 200:	00008067          	ret
 
-00000208 <interruptVec>:
- 208:	fe010113          	add	sp,sp,-32
- 20c:	00112e23          	sw	ra,28(sp)
- 210:	00812c23          	sw	s0,24(sp)
- 214:	02010413          	add	s0,sp,32
- 218:	400007b7          	lui	a5,0x40000
- 21c:	0007a783          	lw	a5,0(a5) # 40000000 <_heap_start+0x2ffffffc>
- 220:	fef42623          	sw	a5,-20(s0)
- 224:	400007b7          	lui	a5,0x40000
- 228:	0007a023          	sw	zero,0(a5) # 40000000 <_heap_start+0x2ffffffc>
- 22c:	fec42783          	lw	a5,-20(s0)
- 230:	0017f793          	and	a5,a5,1
- 234:	00078463          	beqz	a5,23c <interruptVec+0x34>
- 238:	020000ef          	jal	258 <SPImodule>
- 23c:	00800313          	li	t1,8
- 240:	00031073          	.word	0x00031073
- 244:	00000013          	nop
- 248:	01c12083          	lw	ra,28(sp)
- 24c:	01812403          	lw	s0,24(sp)
- 250:	02010113          	add	sp,sp,32
- 254:	00008067          	ret
+00000204 <interrupt_enable>:
+ 204:	ff010113          	add	sp,sp,-16
+ 208:	00812623          	sw	s0,12(sp)
+ 20c:	01010413          	add	s0,sp,16
+ 210:	00800313          	li	t1,8
+ 214:	00031073          	.word	0x00031073
+ 218:	00000013          	nop
+ 21c:	00c12403          	lw	s0,12(sp)
+ 220:	01010113          	add	sp,sp,16
+ 224:	00008067          	ret
 
-00000258 <SPImodule>:
- 258:	fe010113          	add	sp,sp,-32
- 25c:	00812e23          	sw	s0,28(sp)
- 260:	02010413          	add	s0,sp,32
- 264:	ffff0337          	lui	t1,0xffff0
- 268:	200007b7          	lui	a5,0x20000
- 26c:	0007a783          	lw	a5,0(a5) # 20000000 <_heap_start+0xffffffc>
- 270:	fef42623          	sw	a5,-20(s0)
- 274:	fec42703          	lw	a4,-20(s0)
- 278:	30100793          	li	a5,769
- 27c:	00f71c63          	bne	a4,a5,294 <SPImodule+0x3c>
- 280:	200007b7          	lui	a5,0x20000
- 284:	00ace737          	lui	a4,0xace
- 288:	c0070713          	add	a4,a4,-1024 # acdc00 <SPImodule+0xacd9a8>
- 28c:	00e7a023          	sw	a4,0(a5) # 20000000 <_heap_start+0xffffffc>
- 290:	01c0006f          	j	2ac <SPImodule+0x54>
- 294:	fec42703          	lw	a4,-20(s0)
- 298:	fff00793          	li	a5,-1
- 29c:	00f71863          	bne	a4,a5,2ac <SPImodule+0x54>
- 2a0:	200007b7          	lui	a5,0x20000
- 2a4:	0007a023          	sw	zero,0(a5) # 20000000 <_heap_start+0xffffffc>
- 2a8:	00a00f13          	li	t5,10
- 2ac:	00010337          	lui	t1,0x10
- 2b0:	fff30313          	add	t1,t1,-1 # ffff <SPImodule+0xfda7>
- 2b4:	00000013          	nop
- 2b8:	01c12403          	lw	s0,28(sp)
- 2bc:	02010113          	add	sp,sp,32
- 2c0:	00008067          	ret
+00000228 <interruptPortEnable>:
+ 228:	fe010113          	add	sp,sp,-32
+ 22c:	00812e23          	sw	s0,28(sp)
+ 230:	02010413          	add	s0,sp,32
+ 234:	00050793          	mv	a5,a0
+ 238:	fef407a3          	sb	a5,-17(s0)
+ 23c:	fef44783          	lbu	a5,-17(s0)
+ 240:	00078663          	beqz	a5,24c <interruptPortEnable+0x24>
+ 244:	08000313          	li	t1,128
+ 248:	0080006f          	j	250 <interruptPortEnable+0x28>
+ 24c:	00000313          	li	t1,0
+ 250:	00431073          	.word	0x00431073
+ 254:	00000013          	nop
+ 258:	01c12403          	lw	s0,28(sp)
+ 25c:	02010113          	add	sp,sp,32
+ 260:	00008067          	ret
+
+00000264 <intRegister>:
+ 264:	fd010113          	add	sp,sp,-48
+ 268:	02812623          	sw	s0,44(sp)
+ 26c:	03010413          	add	s0,sp,48
+ 270:	fca42e23          	sw	a0,-36(s0)
+ 274:	fdc42783          	lw	a5,-36(s0)
+ 278:	fef42623          	sw	a5,-20(s0)
+ 27c:	100007b7          	lui	a5,0x10000
+ 280:	00478793          	add	a5,a5,4 # 10000004 <_heap_start+0x4>
+ 284:	fec42703          	lw	a4,-20(s0)
+ 288:	00e7a023          	sw	a4,0(a5)
+ 28c:	10000537          	lui	a0,0x10000
+ 290:	00450513          	add	a0,a0,4 # 10000004 <_heap_start+0x4>
+ 294:	00052303          	lw	t1,0(a0)
+ 298:	00531073          	.word	0x00531073
+ 29c:	00000013          	nop
+ 2a0:	02c12403          	lw	s0,44(sp)
+ 2a4:	03010113          	add	sp,sp,48
+ 2a8:	00008067          	ret
+
+000002ac <NVIC>:
+ 2ac:	fe010113          	add	sp,sp,-32
+ 2b0:	00112e23          	sw	ra,28(sp)
+ 2b4:	00812c23          	sw	s0,24(sp)
+ 2b8:	02010413          	add	s0,sp,32
+ 2bc:	400007b7          	lui	a5,0x40000
+ 2c0:	0007c783          	lbu	a5,0(a5) # 40000000 <_heap_start+0x30000000>
+ 2c4:	fef407a3          	sb	a5,-17(s0)
+ 2c8:	400007b7          	lui	a5,0x40000
+ 2cc:	00078023          	sb	zero,0(a5) # 40000000 <_heap_start+0x30000000>
+ 2d0:	fef44783          	lbu	a5,-17(s0)
+ 2d4:	0017f793          	and	a5,a5,1
+ 2d8:	00078463          	beqz	a5,2e0 <NVIC+0x34>
+ 2dc:	df1ff0ef          	jal	cc <SSI_isr>
+ 2e0:	fef44783          	lbu	a5,-17(s0)
+ 2e4:	0027f793          	and	a5,a5,2
+ 2e8:	00078463          	beqz	a5,2f0 <NVIC+0x44>
+ 2ec:	e25ff0ef          	jal	110 <GPIO_isr>
+ 2f0:	fef44783          	lbu	a5,-17(s0)
+ 2f4:	0047f793          	and	a5,a5,4
+ 2f8:	00078463          	beqz	a5,300 <NVIC+0x54>
+ 2fc:	e7dff0ef          	jal	178 <Timer_isr>
+ 300:	00800313          	li	t1,8
+ 304:	00031073          	.word	0x00031073
+ 308:	00000013          	nop
+ 30c:	01c12083          	lw	ra,28(sp)
+ 310:	01812403          	lw	s0,24(sp)
+ 314:	02010113          	add	sp,sp,32
+ 318:	00008067          	ret
+
+0000031c <INTENABLE>:
+ 31c:	fe010113          	add	sp,sp,-32
+ 320:	00812e23          	sw	s0,28(sp)
+ 324:	02010413          	add	s0,sp,32
+ 328:	00050793          	mv	a5,a0
+ 32c:	fef407a3          	sb	a5,-17(s0)
+ 330:	400007b7          	lui	a5,0x40000
+ 334:	00178793          	add	a5,a5,1 # 40000001 <_heap_start+0x30000001>
+ 338:	0007c783          	lbu	a5,0(a5)
+ 33c:	0ff7f713          	zext.b	a4,a5
+ 340:	400007b7          	lui	a5,0x40000
+ 344:	00178793          	add	a5,a5,1 # 40000001 <_heap_start+0x30000001>
+ 348:	fef44683          	lbu	a3,-17(s0)
+ 34c:	00d76733          	or	a4,a4,a3
+ 350:	0ff77713          	zext.b	a4,a4
+ 354:	00e78023          	sb	a4,0(a5)
+ 358:	00000013          	nop
+ 35c:	01c12403          	lw	s0,28(sp)
+ 360:	02010113          	add	sp,sp,32
+ 364:	00008067          	ret
+
+00000368 <INTDISABLE>:
+ 368:	fe010113          	add	sp,sp,-32
+ 36c:	00812e23          	sw	s0,28(sp)
+ 370:	02010413          	add	s0,sp,32
+ 374:	00050793          	mv	a5,a0
+ 378:	fef407a3          	sb	a5,-17(s0)
+ 37c:	400007b7          	lui	a5,0x40000
+ 380:	00178793          	add	a5,a5,1 # 40000001 <_heap_start+0x30000001>
+ 384:	0007c783          	lbu	a5,0(a5)
+ 388:	0ff7f793          	zext.b	a5,a5
+ 38c:	01879713          	sll	a4,a5,0x18
+ 390:	41875713          	sra	a4,a4,0x18
+ 394:	fef40783          	lb	a5,-17(s0)
+ 398:	fff7c793          	not	a5,a5
+ 39c:	01879793          	sll	a5,a5,0x18
+ 3a0:	4187d793          	sra	a5,a5,0x18
+ 3a4:	00f777b3          	and	a5,a4,a5
+ 3a8:	01879713          	sll	a4,a5,0x18
+ 3ac:	41875713          	sra	a4,a4,0x18
+ 3b0:	400007b7          	lui	a5,0x40000
+ 3b4:	00178793          	add	a5,a5,1 # 40000001 <_heap_start+0x30000001>
+ 3b8:	0ff77713          	zext.b	a4,a4
+ 3bc:	00e78023          	sb	a4,0(a5)
+ 3c0:	00000013          	nop
+ 3c4:	01c12403          	lw	s0,28(sp)
+ 3c8:	02010113          	add	sp,sp,32
+ 3cc:	00008067          	ret
+
+000003d0 <GPIO_Input>:
+ 3d0:	fe010113          	add	sp,sp,-32
+ 3d4:	00812e23          	sw	s0,28(sp)
+ 3d8:	02010413          	add	s0,sp,32
+ 3dc:	00050793          	mv	a5,a0
+ 3e0:	fef407a3          	sb	a5,-17(s0)
+ 3e4:	300007b7          	lui	a5,0x30000
+ 3e8:	00878793          	add	a5,a5,8 # 30000008 <_heap_start+0x20000008>
+ 3ec:	0007c783          	lbu	a5,0(a5)
+ 3f0:	0ff7f793          	zext.b	a5,a5
+ 3f4:	01879713          	sll	a4,a5,0x18
+ 3f8:	41875713          	sra	a4,a4,0x18
+ 3fc:	fef40783          	lb	a5,-17(s0)
+ 400:	fff7c793          	not	a5,a5
+ 404:	01879793          	sll	a5,a5,0x18
+ 408:	4187d793          	sra	a5,a5,0x18
+ 40c:	00f777b3          	and	a5,a4,a5
+ 410:	01879713          	sll	a4,a5,0x18
+ 414:	41875713          	sra	a4,a4,0x18
+ 418:	300007b7          	lui	a5,0x30000
+ 41c:	00878793          	add	a5,a5,8 # 30000008 <_heap_start+0x20000008>
+ 420:	0ff77713          	zext.b	a4,a4
+ 424:	00e78023          	sb	a4,0(a5)
+ 428:	00000013          	nop
+ 42c:	01c12403          	lw	s0,28(sp)
+ 430:	02010113          	add	sp,sp,32
+ 434:	00008067          	ret
+
+00000438 <GPIO_Output>:
+ 438:	fe010113          	add	sp,sp,-32
+ 43c:	00812e23          	sw	s0,28(sp)
+ 440:	02010413          	add	s0,sp,32
+ 444:	00050793          	mv	a5,a0
+ 448:	fef407a3          	sb	a5,-17(s0)
+ 44c:	300007b7          	lui	a5,0x30000
+ 450:	00878793          	add	a5,a5,8 # 30000008 <_heap_start+0x20000008>
+ 454:	0007c783          	lbu	a5,0(a5)
+ 458:	0ff7f713          	zext.b	a4,a5
+ 45c:	300007b7          	lui	a5,0x30000
+ 460:	00878793          	add	a5,a5,8 # 30000008 <_heap_start+0x20000008>
+ 464:	fef44683          	lbu	a3,-17(s0)
+ 468:	00d76733          	or	a4,a4,a3
+ 46c:	0ff77713          	zext.b	a4,a4
+ 470:	00e78023          	sb	a4,0(a5)
+ 474:	00000013          	nop
+ 478:	01c12403          	lw	s0,28(sp)
+ 47c:	02010113          	add	sp,sp,32
+ 480:	00008067          	ret
+
+00000484 <GPIO_write>:
+ 484:	fe010113          	add	sp,sp,-32
+ 488:	00812e23          	sw	s0,28(sp)
+ 48c:	02010413          	add	s0,sp,32
+ 490:	00050793          	mv	a5,a0
+ 494:	00058713          	mv	a4,a1
+ 498:	fef407a3          	sb	a5,-17(s0)
+ 49c:	00070793          	mv	a5,a4
+ 4a0:	fef40723          	sb	a5,-18(s0)
+ 4a4:	300007b7          	lui	a5,0x30000
+ 4a8:	00478793          	add	a5,a5,4 # 30000004 <_heap_start+0x20000004>
+ 4ac:	0007c783          	lbu	a5,0(a5)
+ 4b0:	0ff7f793          	zext.b	a5,a5
+ 4b4:	01879713          	sll	a4,a5,0x18
+ 4b8:	41875713          	sra	a4,a4,0x18
+ 4bc:	fef40783          	lb	a5,-17(s0)
+ 4c0:	fff7c793          	not	a5,a5
+ 4c4:	01879793          	sll	a5,a5,0x18
+ 4c8:	4187d793          	sra	a5,a5,0x18
+ 4cc:	00f777b3          	and	a5,a4,a5
+ 4d0:	01879713          	sll	a4,a5,0x18
+ 4d4:	41875713          	sra	a4,a4,0x18
+ 4d8:	fee44783          	lbu	a5,-18(s0)
+ 4dc:	00078693          	mv	a3,a5
+ 4e0:	fef44783          	lbu	a5,-17(s0)
+ 4e4:	00f6f7b3          	and	a5,a3,a5
+ 4e8:	0ff7f793          	zext.b	a5,a5
+ 4ec:	01879793          	sll	a5,a5,0x18
+ 4f0:	4187d793          	sra	a5,a5,0x18
+ 4f4:	00f767b3          	or	a5,a4,a5
+ 4f8:	01879713          	sll	a4,a5,0x18
+ 4fc:	41875713          	sra	a4,a4,0x18
+ 500:	300007b7          	lui	a5,0x30000
+ 504:	00478793          	add	a5,a5,4 # 30000004 <_heap_start+0x20000004>
+ 508:	0ff77713          	zext.b	a4,a4
+ 50c:	00e78023          	sb	a4,0(a5)
+ 510:	00000013          	nop
+ 514:	01c12403          	lw	s0,28(sp)
+ 518:	02010113          	add	sp,sp,32
+ 51c:	00008067          	ret
+
+00000520 <GPIO_read>:
+ 520:	ff010113          	add	sp,sp,-16
+ 524:	00812623          	sw	s0,12(sp)
+ 528:	01010413          	add	s0,sp,16
+ 52c:	300007b7          	lui	a5,0x30000
+ 530:	0007c783          	lbu	a5,0(a5) # 30000000 <_heap_start+0x20000000>
+ 534:	0ff7f793          	zext.b	a5,a5
+ 538:	00078513          	mv	a0,a5
+ 53c:	00c12403          	lw	s0,12(sp)
+ 540:	01010113          	add	sp,sp,16
+ 544:	00008067          	ret
+
+00000548 <GPIO_IntEnable>:
+ 548:	fe010113          	add	sp,sp,-32
+ 54c:	00812e23          	sw	s0,28(sp)
+ 550:	02010413          	add	s0,sp,32
+ 554:	00050793          	mv	a5,a0
+ 558:	fef407a3          	sb	a5,-17(s0)
+ 55c:	300007b7          	lui	a5,0x30000
+ 560:	00478793          	add	a5,a5,4 # 30000004 <_heap_start+0x20000004>
+ 564:	0007c783          	lbu	a5,0(a5)
+ 568:	0ff7f713          	zext.b	a4,a5
+ 56c:	300007b7          	lui	a5,0x30000
+ 570:	00478793          	add	a5,a5,4 # 30000004 <_heap_start+0x20000004>
+ 574:	fef44683          	lbu	a3,-17(s0)
+ 578:	00d76733          	or	a4,a4,a3
+ 57c:	0ff77713          	zext.b	a4,a4
+ 580:	00e78023          	sb	a4,0(a5)
+ 584:	00000013          	nop
+ 588:	01c12403          	lw	s0,28(sp)
+ 58c:	02010113          	add	sp,sp,32
+ 590:	00008067          	ret
