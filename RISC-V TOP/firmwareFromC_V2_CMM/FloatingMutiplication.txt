@@ -1,0 +1,33 @@
+uint32_t  mulFloating(uint32_t a, uint32_t b){ //treballem amb alguna mena de notacio cientifica (8b de 2**n i 24bits de numero) (han de ser positius)
+	uint32_t a_base = a & BASE_MASK;
+	uint32_t b_base = b & BASE_MASK;
+	uint32_t c_base = 0;
+	int8_t a_exp = (int8_t) ((a&EXP_MASK)>>EXP_SH);
+	int8_t b_exp = (int8_t) ((a&EXP_MASK)>>EXP_SH);
+	int8_t c_exp = 0;
+
+	uint32_t i;
+
+	if(a_base>b_base){
+		for(i=0;i<b_base;i++){
+			c_base+=a_base;
+			if(c_base>=BASE_MASK){
+				c_base=c_base>>1;
+				c_exp+=1;
+			}
+		}
+	}
+	else{
+		for(i=0;i<a_base;i++){
+			c_base+=b_base;
+			if(c_base>=BASE_MASK){
+				c_base=c_base>>1;
+				c_exp+=1;
+			}
+		}
+	}
+	c_exp=c_exp+a_exp+b_exp; //sumem exponents
+
+	c_base=c_base | (c_exp<<EXP_SH);
+	return c_base;
+}
