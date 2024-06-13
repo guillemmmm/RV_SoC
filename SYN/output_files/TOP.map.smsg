@@ -1,1 +1,0 @@
-Info (10281): Verilog HDL Declaration information at TOP.v(38): object "SPI_ADDR" differs only in case from object "SPI_addr" in the same scope File: /home/lab/Documents/ServRISC/ServGuillem_maig/RV_SoC/RTL/TOP.v Line: 38
